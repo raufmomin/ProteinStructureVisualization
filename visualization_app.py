@@ -62,6 +62,8 @@ def load_pdb_and_show_3d(pdb_file_path, style='stick', color='blue'):
     st.components.v1.html(viewer_html, height=600)
 
 def show_3d_model_from_selection(df):
+    st.subheader('Individual Protein Structure')
+
     if 'model' not in df.columns:
         st.error('No model column in the dataset.')
         return
@@ -79,6 +81,16 @@ def show_3d_model_from_selection(df):
             load_pdb_and_show_3d(pdb_file_path)
         else:
             st.error(f'PDB file for {selected_model} not found at the expected location.')
+
+def show_3d_model_ensemble():
+    st.subheader('Ensemble Protein Structure')
+
+    pdb_file_path = f'dataset/ensembles/PED00020e00{int(uploaded_file.name.split(".")[0][-1])}.pdb'
+
+    if os.path.exists(pdb_file_path):
+        load_pdb_and_show_3d(pdb_file_path)
+    else:
+        st.error(f'PDB file for {pdb_file_path} not found at the expected location.')
 
 st.title('Advanced Protein Structure Visualization')
 
@@ -177,5 +189,7 @@ if uploaded_file is not None:
     if st.session_state.df is not None:
         show_3d_model_from_selection(st.session_state.df)
 
+    show_3d_model_ensemble()
+    
 else:
     st.info('Please upload a CSV or JSON file to see the visualizations.')
